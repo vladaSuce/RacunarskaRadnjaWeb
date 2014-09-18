@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="WebProdavnica" default="deploy" basedir=".">
+
+	<property file="build.properties"/>
+	<property name="src" location="src"/>
+	<property name="build" location="build"/>
+	<property name="war-location" location="${application-name}.war"/>
+	
+	<path id="libs">
+		<fileset dir="WebContent/WEB-INF/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
+ 	<target name="init">
+ 		<mkdir dir="${build}"/>
+		<mkdir dir="${build}/classes"/>
+	</target>
+	
+	<target name="build" depends="init">
+		<javac srcdir="${src}" destdir="${build}/classes">
+			<classpath refid="libs"/>
+		</javac>
+	</target>
+	
+	<target name="war" depends="build">
+		<war destfile="${war-location}" webxml="WebContent/WEB-INF/web.xml">
+			<fileset dir="WebContent"/>
+			<classes dir="${build}/classes"/>
+		</war>
+	</target>
+	
+	<target name="deploy" depends="war">
+		<copy file="${war-location}" todir="${tomcat-path}/webapps"/>
+		<delete file="${war-location}"/>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${build}"/>
+		<delete file="${war-location}"/>
+	</target>
+	
+</project>
